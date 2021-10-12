@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<style>
+
+    .space {
+        margin-right: 10px;
+        margin-left: 5px;
+    }
+
+    .button-section {
+        width: 550px;
+        margin-bottom: 20px;
+    }
+
+    .pagination {
+        display: inline-block;
+        width: 150px;
+    }
+
+    .pagination a {
+        color: black;
+        float: left;
+        padding: 5px 5px;
+        text-decoration: none;
+    }
+
+    .pagination a.active {
+        background-color: gray;
+        color: white;
+        border-radius: 2px;
+    }
+</style>
+<head>
+    <!-- Bootstrap core CSS -->
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <div id="foto" style="text-align: center;">
+        <img src="../static/images/Jumia-group-logo.webp" width="200" height="50" alt="foto1" th:src="@{images/Jumia-group-logo.webp}"/>
+    </div>
+    <title>Country Phone Code Checker</title>
+</head>
+<body>
+<div class="card">
+    <div class="card-header">
+        <h3 class="text-center">Country Phone Code Checker</h3>
+    </div>
+    <div class="card-body">
+        <form th:action="@{/(country=${country}, status=${status})}" th:object="${filter}" th:method="get">
+
+            <div class="form-inline mx-auto button-section">
+                <label th:for="country" th:text="'Country:'"></label>
+                <select th:field="*{country}" class="space form-control">
+                    <option value=""></option>
+                    <option th:each="country : ${T(com.jumia.countryphone.enums.Country).values()}"
+                            th:value="${country}"
+                            th:text="${country.getCountryName()}">
+                    </option>
+                </select>
+
+                <label th:for="status" th:text="'Phone Status:'"></label>
+                <select th:field="*{status}" class="space form-control">
+                    <option value=""></option>
+                    <option th:each="status : ${T(com.jumia.countryphone.enums.PhoneStatus).values()}"
+                            th:value="${status}"
+                            th:text="${status}">
+                    </option>
+                </select>
+
+                <button type="submit" class="btn btn-outline-primary space">Filter</button>
+            </div>
+
+            <div class="mx-auto" style="width: 850px;">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th th:text="#{msg.title.id}" scope="col" />
+                        <th th:text="#{msg.title.name}" scope="col" />
+                        <th th:text="#{msg.title.phone}" scope="col" />
+                        <th th:text="#{msg.title.country}" scope="col" />
+                        <th th:text="#{msg.title.phone.status}" scope="col" />
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="customer : ${customersPage.content}" scope="row">
+                        <td th:text="${customer.id}" />
+                        <td th:text="${customer.name}" />
+                        <td th:text="${customer.phone}" />
+                        <td th:text="${customer.country}" />
+                        <td th:text="${customer.phoneStatus}" />
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div th:if="${customersPage.totalPages > 0}" class="pagination mx-auto">
+                <div th:each="pageNumber : ${pageNumbers}">
+                    <a th:href="@{/(country=${filter.country}, status=${filter.status}, size=${customersPage.size}, page=${pageNumber})}"
+                       th:text=${pageNumber}
+                       th:class="${pageNumber==customersPage.number + 1} ? active"></a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

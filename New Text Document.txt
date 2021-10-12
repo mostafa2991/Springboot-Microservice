@@ -1,0 +1,4 @@
+
+docker run -d -p 9411:9411 openzipkin/zipkin:2.23
+docker run -d -p 9002:9002 melhagez/mmv2-user-service:0.0.1-SNAPSHOT
+spring-boot:build-image -DskipTests

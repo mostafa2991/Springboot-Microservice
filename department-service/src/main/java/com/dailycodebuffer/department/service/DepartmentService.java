@@ -3,6 +3,9 @@ package com.dailycodebuffer.department.service;
 import com.dailycodebuffer.department.entity.Department;
 import com.dailycodebuffer.department.repository.DepartmentRepository;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,5 +24,10 @@ public class DepartmentService {
     public Department findDepartmentById(Long departmentId) {
         log.info("Inside saveDepartment of DepartmentService");
         return departmentRepository.findByDepartmentId(departmentId);
+    }
+//    for hateos
+    public List<Department> findAllDepartment() {
+    	log.info("Inside findAllDepartment of DepartmentService");
+    	return departmentRepository.findAll();
     }
 }

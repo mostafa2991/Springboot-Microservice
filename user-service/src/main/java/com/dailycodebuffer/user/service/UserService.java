@@ -13,29 +13,44 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
+//	for feign
+	@Autowired
+	private DocumentProxy documentProxy;
 
-    @Autowired
-    private RestTemplate restTemplate;
+	@Autowired
+	private RestTemplate restTemplate;
 
-    public User saveUser(User user) {
-        log.info("Inside saveUser of UserService");
-        return userRepository.save(user);
-    }
+	public User saveUser(User user) {
+		log.info("Inside saveUser of UserService");
+		return userRepository.save(user);
+	}
 
-    public ResponseTemplateVO getUserWithDepartment(Long userId) {
-        log.info("Inside getUserWithDepartment of UserService");
-        ResponseTemplateVO vo = new ResponseTemplateVO();
-        User user = userRepository.findByUserId(userId);
-
-        Department department =
-                restTemplate.getForObject("http://DEPARTMENT-SERVICE/departments/" + user.getDepartmentId()
-                        ,Department.class);
-
-        vo.setUser(user);
-        vo.setDepartment(department);
-
-        return  vo;
-    }
+//	public ResponseTemplateVO getUserWithDepartment(Long userId) {
+//		log.info("Inside getUserWithDepartment of UserService");
+//		ResponseTemplateVO vo = new ResponseTemplateVO();
+//		User user = userRepository.findByUserId(userId);
+//
+//		Department department = restTemplate
+//				.getForObject("http://DEPARTMENT-SERVICE/departments/" + user.getDepartmentId(), Department.class);
+//
+//		vo.setUser(user);
+//		vo.setDepartment(department);
+//
+//		return vo;
+//	}
+//	use feign
+	public ResponseTemplateVO getUserWithDepartment(Long userId) {
+		log.info("Inside getUserWithDepartment of UserService");
+		ResponseTemplateVO vo = new ResponseTemplateVO();
+		User user = userRepository.findByUserId(userId);
+		
+		Department department = documentProxy.getUserWithDepartment(user.getDepartmentId());
+		
+		vo.setUser(user);
+		vo.setDepartment(department);
+		
+		return vo;
+	}
 }
